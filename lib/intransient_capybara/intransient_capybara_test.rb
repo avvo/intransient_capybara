@@ -30,7 +30,7 @@ class IntransientCapybaraTest < ActionDispatch::IntegrationTest
 
     page.driver.browser.url_blacklist = self.class.blacklisted_urls
 
-    resize_window_by [1024, 768]
+    resize_window_by default_window_size
 
     warm_asset_cache
 
