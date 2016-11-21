@@ -58,11 +58,4 @@ module Capybara
       @server.reset_error! if @server
     end
   end
-
-  # Since host is hardcoded to 127.0.0.1 in Capybara, override it
-  class Server
-    def host
-      AppSettings.host
-    end
-  end
 end
