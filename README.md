@@ -60,11 +60,13 @@ Inherit from IntransientCapybaraTest in all your integration tests
     end
 ```
 
-Include RackRequestBlocker.  You could do this in an "if test" block in application.rb but I like to include it in config/environments/test.rb.
+Include RackRequestBlocker, in application.rb.
 
 ```ruby
-  require File.expand_path('../../../test/rack_request_blocker', __FILE__)
-  config.middleware.insert_before('ActionDispatch::Static', 'RackRequestBlocker')
+    if Rails.env.test?
+      require 'intransient_capybara/rack_request_blocker'
+      config.middleware.insert_before('ActionDispatch::Static', 'RackRequestBlocker')
+    end
 ```
 
 Register the driver
