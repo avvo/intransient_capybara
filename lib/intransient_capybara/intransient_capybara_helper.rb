@@ -2,7 +2,7 @@ module IntransientCapybaraHelper
 
   def wait_for_response!(max_ajax_seconds = 3)
     wait_for_page_load!
-    wait_for_ajax!(max_ajax_seconds) if webkit?
+    wait_for_ajax!(max_ajax_seconds)
   end
 
   def wait_for_ajax!(max_seconds = 3)
