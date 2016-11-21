@@ -92,31 +92,31 @@ Register the driver
 
 ###Debuggability
 
-1) When an element is not found, we output what the current path is and the page's entire HTML, to debug what is going on.  A common case is getting redirected somewhere else, and another is the wrong template is rendering or your partial is not rendering at all.  Sometimes you look at the HTML and your element is there and knowing that will help figure out why the selector isn't working.
+1. When an element is not found, we output what the current path is and the page's entire HTML, to debug what is going on.  A common case is getting redirected somewhere else, and another is the wrong template is rendering or your partial is not rendering at all.  Sometimes you look at the HTML and your element is there and knowing that will help figure out why the selector isn't working.
 
-2) When environment variable DEBUG_TEST_TRAFFIC is 'true', we output a summary of network traffic from each test.  If you are downloading a lot of stuff or making inordinant amounts of calls it will be insightful to you to know this - it might be reducable, or you may need to preload stuff, etc.  You can also set DEBUG_TEST_TRAFFIC_RAISE_EXTERNAL to 'true' and we will throw an exception if you make a network call to an external service.  This is super common and you should either stub out all of these or add them to the blacklist.  jQuery is a common one if you are loading that JS from a CDN, and you may need to load it from the asset pipeline during tests instead.
+2. When environment variable DEBUG_TEST_TRAFFIC is 'true', we output a summary of network traffic from each test.  If you are downloading a lot of stuff or making inordinant amounts of calls it will be insightful to you to know this - it might be reducable, or you may need to preload stuff, etc.  You can also set DEBUG_TEST_TRAFFIC_RAISE_EXTERNAL to 'true' and we will throw an exception if you make a network call to an external service.  This is super common and you should either stub out all of these or add them to the blacklist.  jQuery is a common one if you are loading that JS from a CDN, and you may need to load it from the asset pipeline during tests instead.
 
-3) When environment variable TRACE_TEST_FRAMEWORK is 'true', we output some traces of blocking rack requests and the calling of test setup and teardown.  This can help you make sure your ordering is correct and could help you see if things are happening concurrently or not.
+3. When environment variable TRACE_TEST_FRAMEWORK is 'true', we output some traces of blocking rack requests and the calling of test setup and teardown.  This can help you make sure your ordering is correct and could help you see if things are happening concurrently or not.
 
 ###Correct configuration
 
-1) Capybara.default_max_wait_time is a very important decision.  This gem defaults that to 10 seconds.  More than that and you're probably failing anyways and you're just extending your test run for no reason.  Much less and you get transient.  Time is less important than stability and 10 seconds is a good balance on the stabiltiy side of the world.  You can override this by setting Capybara.default_max_wait_time again in your inherited class.
+1. Capybara.default_max_wait_time is a very important decision.  This gem defaults that to 10 seconds.  More than that and you're probably failing anyways and you're just extending your test run for no reason.  Much less and you get transient.  Time is less important than stability and 10 seconds is a good balance on the stabiltiy side of the world.  You can override this by setting Capybara.default_max_wait_time again in your inherited class.
 
-2) Set phantomjs_options when you set up Poltergeist.  Not loading images and ignoring SSL errors are the common suggestions to improve stability in PhantomJS.
+2. Set phantomjs_options when you set up Poltergeist.  Not loading images and ignoring SSL errors are the common suggestions to improve stability in PhantomJS.
 
-###Correct usage if Capybara/Poltergeist/PhantomJS
+###Correct usage of Capybara/Poltergeist/PhantomJS
 
-1) You need to setup and teardown consistently in your tests, so we will throw an exception if you override one of these and forget to call super (which is SUPER common).
+1. You need to setup and teardown consistently in your tests, so we will throw an exception if you override one of these and forget to call super (which is SUPER common).
 
-2) When you reach a timeout, a warning is printed.  Sometimes writing a test wrong will always reach the timeout so this helps to improve test performance.  This is similar to capybara-slow_finder_errors but since we are patching this method for another reason as well we also patch this part.  https://github.com/ngauthier/capybara-slow_finder_errors.
+2. When you reach a timeout, a warning is printed.  Sometimes writing a test wrong will always reach the timeout so this helps to improve test performance.  This is similar to capybara-slow_finder_errors but since we are patching this method for another reason as well we also patch this part.  https://github.com/ngauthier/capybara-slow_finder_errors.
 
-3) A lot of stuff gets downloaded on the first page load, so a lot of transient tests are because of the very first page load.  We will load a page for you before we run tests to fix this.  The root path is default, and you can override it with IntransientCapybaraTest.cache_warmup_path = 'my path'.
+3. A lot of stuff gets downloaded on the first page load, so a lot of transient tests are because of the very first page load.  We will load a page for you before we run tests to fix this.  The root path is default, and you can override it with IntransientCapybaraTest.cache_warmup_path = 'my path'.
 
 ### Capybara/Poltergeist/PhantomJS improvements
 
-1) Rack request blocker - http://blog.salsify.com/engineering/tearing-capybara-ajax-tests.  TLDR, use middleware to trace server calls so we KNOW when requests are complete before moving on to the next test.  This helps a LOT.  For example, if you clear out mocks in your teardown method, and you call teardown while an AJAX request is still running, you can have problems from missing mocks because of this race condition.
+1. Rack request blocker - http://blog.salsify.com/engineering/tearing-capybara-ajax-tests.  TLDR, use middleware to trace server calls so we KNOW when requests are complete before moving on to the next test.  This helps a LOT.  For example, if you clear out mocks in your teardown method, and you call teardown while an AJAX request is still running, you can have problems from missing mocks because of this race condition.
 
-2) Minitest retry.  This is two parts.  First, no matter what you do, sometimes PhantomJS dies on you.  We catch DeadClient and will retry a test once if it gets thrown.  Next, more controversially, even after all the improvements represented here and elsewhere, sometimes we get transient tests.  We do our best, but they're there.  Most of the time we re-run them and move on.  Why waste time re-running them manually?  We will run tests the number of times the environment variable MINITEST_RETRY_COUNT is set to, defaulting to 3 times (so, 2 retries for every test by default).  If it fails at first then succeeds, we will output that it is a transient test and report the success of the test.
+2. Minitest retry.  This is two parts.  First, no matter what you do, sometimes PhantomJS dies on you.  We catch DeadClient and will retry a test once if it gets thrown.  Next, more controversially, even after all the improvements represented here and elsewhere, sometimes we get transient tests.  We do our best, but they're there.  Most of the time we re-run them and move on.  Why waste time re-running them manually?  We will run tests the number of times the environment variable MINITEST_RETRY_COUNT is set to, defaulting to 3 times (so, 2 retries for every test by default).  If it fails at first then succeeds, we will output that it is a transient test and report the success of the test.
 
 ## Development
 
