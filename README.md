@@ -84,7 +84,6 @@ Register the driver
             [
               '--load-images=no',
               '--ignore-ssl-errors=yes',
-              '--resource-timeout=30',
             ],
         }
       )
