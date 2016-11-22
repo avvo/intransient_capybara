@@ -20,7 +20,9 @@ module Minitest
         first_result ||= result
 
         if result.passed?
-          report_result = result
+          unless ENV.fetch('TRANSIENT_TESTS_REPORT_FAILURE', false) == 'true'
+            report_result = result
+          end
           break
         else
           if @@global_retry_count.value >= GLOBAL_RETRY_LIMIT
