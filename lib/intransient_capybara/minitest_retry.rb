@@ -1,5 +1,5 @@
 # Adapted from https://github.com/appfolio/minitest-optional_retry/blob/master/lib/minitest/optional_retry.rb
-require 'minitest/autorun'
+require 'minitest'
 require 'atomic'
 
 module Minitest
