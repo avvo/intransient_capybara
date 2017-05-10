@@ -36,6 +36,7 @@ module Minitest
           if result.failure.exception.present? && result.failure.exception.class.to_s == 'Capybara::Poltergeist::DeadClient'
             puts "PhantomJS died!!!! - #{klass.to_s}##{method_name}"
             test_executions -= 1
+            first_result = nil
             next
           end
 
