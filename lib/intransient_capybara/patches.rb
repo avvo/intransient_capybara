@@ -37,8 +37,11 @@ module Capybara
           puts 'We failed to find an element :('
           puts
           puts 'We are on path: ' + session.current_path
-          puts
-          puts 'This is the page HTML: ' + session.body
+
+          unless ENV.fetch('DEBUG_HIDE_PAGE_HTML', false) == 'true'
+            puts
+            puts 'This is the page HTML: ' + session.body
+          end
           puts
           raise sad_day
 

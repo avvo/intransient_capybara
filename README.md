@@ -93,7 +93,7 @@ Register the driver
 
 ### Debuggability
 
-1. When an element is not found, we output what the current path is and the page's entire HTML, to debug what is going on.  A common case is getting redirected somewhere else, and another is the wrong template is rendering or your partial is not rendering at all.  Sometimes you look at the HTML and your element is there and knowing that will help figure out why the selector isn't working.
+1. When an element is not found, we output what the current path is and the page's entire HTML (unless environment variable DEBUG_HIDE_PAGE_HTML is 'true'), to debug what is going on.  A common case is getting redirected somewhere else, and another is the wrong template is rendering or your partial is not rendering at all.  Sometimes you look at the HTML and your element is there and knowing that will help figure out why the selector isn't working.
 
 2. When environment variable DEBUG_TEST_TRAFFIC is 'true', we output a summary of network traffic from each test.  If you are downloading a lot of stuff or making inordinant amounts of calls it will be insightful to you to know this - it might be reducable, or you may need to preload stuff, etc.  You can also set DEBUG_TEST_TRAFFIC_RAISE_EXTERNAL to 'true' and we will throw an exception if you make a network call to an external service.  This is super common and you should either stub out all of these or add them to the blacklist.  jQuery is a common one if you are loading that JS from a CDN, and you may need to load it from the asset pipeline during tests instead.
 
