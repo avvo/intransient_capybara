@@ -14,7 +14,10 @@ module Minitest
 
       retries = [ENV.fetch('MINITEST_RETRY_COUNT', 3).to_i, 1].max
 
-      retries.times do
+      test_executions = 0
+      while test_executions < retries do
+        test_executions += 1
+
         result = Minitest.run_one_method(klass, method_name)
 
         first_result ||= result
@@ -32,6 +35,7 @@ module Minitest
 
           if result.failure.exception.present? && result.failure.exception.class.to_s == 'Capybara::Poltergeist::DeadClient'
             puts "PhantomJS died!!!! - #{klass.to_s}##{method_name}"
+            test_executions -= 1
             next
           end
 
