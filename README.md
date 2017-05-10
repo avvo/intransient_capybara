@@ -91,7 +91,7 @@ Register the driver
 
 ```
 
-###Debuggability
+### Debuggability
 
 1. When an element is not found, we output what the current path is and the page's entire HTML, to debug what is going on.  A common case is getting redirected somewhere else, and another is the wrong template is rendering or your partial is not rendering at all.  Sometimes you look at the HTML and your element is there and knowing that will help figure out why the selector isn't working.
 
@@ -99,13 +99,13 @@ Register the driver
 
 3. When environment variable TRACE_TEST_FRAMEWORK is 'true', we output some traces of blocking rack requests and the calling of test setup and teardown.  This can help you make sure your ordering is correct and could help you see if things are happening concurrently or not.
 
-###Correct configuration
+### Correct configuration
 
 1. Capybara.default_max_wait_time is a very important decision.  This gem defaults that to 10 seconds.  More than that and you're probably failing anyways and you're just extending your test run for no reason.  Much less and you get transient.  Time is less important than stability and 10 seconds is a good balance on the stabiltiy side of the world.  You can override this by setting Capybara.default_max_wait_time again in your inherited class.
 
 2. Set phantomjs_options when you set up Poltergeist.  Not loading images and ignoring SSL errors are the common suggestions to improve stability in PhantomJS.
 
-###Correct usage of Capybara/Poltergeist/PhantomJS
+### Correct usage of Capybara/Poltergeist/PhantomJS
 
 1. You need to setup and teardown consistently in your tests, so we will throw an exception if you override one of these and forget to call super (which is SUPER common).
 
