@@ -19,7 +19,7 @@ module Minitest
 
         first_result ||= result
 
-        if result.passed?
+        if result.passed? || result.skipped?
           unless ENV.fetch('TRANSIENT_TESTS_REPORT_FAILURE', false) == 'true'
             report_result = result
           end
