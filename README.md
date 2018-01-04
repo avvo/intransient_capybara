@@ -19,6 +19,7 @@ https://github.com/appfolio/minitest-optional_retry
 Install intransient_capybara from the command line:
 
     $ gem install intransient_capybara --source https://packagecloud.io/avvo/gems
+
 or within a Gemfile:
 
     source 'https://packagecloud.io/avvo/gems' do
