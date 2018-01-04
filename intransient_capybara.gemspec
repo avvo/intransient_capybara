@@ -7,8 +7,8 @@ require 'intransient_capybara/version'
 Gem::Specification.new do |spec|
   spec.name          = "intransient_capybara"
   spec.version       = IntransientCapybara::VERSION
-  spec.authors       = ["Seth Ringling"]
-  spec.email         = ["sringling@avvo.com"]
+  spec.authors       = "Infrastructure team"
+  spec.email         = "Infrastructure@avvo.com"
 
   spec.summary       = %q{A set of improvements to Capybara/Poltergeist/PhantomJS test stack that reduces the occurrence transient failures.}
   spec.description   = %q{With improved debuggability, with proper usage and configuration of Capybara/Poltergeist/PhantomJS, and with some improvements on top of it we can greatly reduce the occurrence of transient integration/UI test failures.}
