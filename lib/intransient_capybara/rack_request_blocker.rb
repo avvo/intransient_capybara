@@ -1,10 +1,10 @@
-require 'atomic'
+require 'concurrent/atomics'
 
 # Rack middleware that keeps track of the number of active requests and can block new requests.
 class RackRequestBlocker
 
-  @@num_active_requests = Atomic.new(0)
-  @@block_requests = Atomic.new(false)
+  @@num_active_requests = Concurrent::AtomicReference.new(0)
+  @@block_requests = Concurrent::AtomicReference.new(false)
 
   # Returns the number of requests the server is currently processing.
   def self.num_active_requests

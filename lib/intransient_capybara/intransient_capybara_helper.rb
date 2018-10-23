@@ -99,7 +99,7 @@ module IntransientCapybaraHelper
   end
 
   def resize_window_by(size)
-    page.driver.resize size[0], size[1]
+    page.driver.browser.manage.window.resize_to size[0], size[1]
   end
 
 end

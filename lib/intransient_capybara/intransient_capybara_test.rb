@@ -1,6 +1,5 @@
 require "capybara/rails"
-require "capybara/poltergeist"
-require 'atomic'
+require 'concurrent/atomics'
 
 class IntransientCapybaraTest < ActionDispatch::IntegrationTest
   extend Minitest::OptionalRetry
@@ -12,12 +11,19 @@ class IntransientCapybaraTest < ActionDispatch::IntegrationTest
   cattr_writer :default_window_size
   cattr_writer :cache_warmup_path
 
-  @@warm_asset_cache = Atomic.new(false)
-  @@warming_asset_cache = Atomic.new(false)
+  @@warm_asset_cache = Concurrent::AtomicReference.new(false)
+  @@warming_asset_cache = Concurrent::AtomicReference.new(false)
+
+  Capybara.register_driver :chrome do |app|
+    options = Selenium::WebDriver::Chrome::Options.new(
+      args: %w[headless disable-gpu no-sandbox]
+    )
+    driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+  end
 
   Capybara.default_max_wait_time = 10
-  Capybara.current_driver = :poltergeist
-  Capybara.javascript_driver = :poltergeist
+  Capybara.default_driver = :chrome
+  Capybara.javascript_driver = :chrome
 
   def setup
     super
@@ -28,7 +34,8 @@ class IntransientCapybaraTest < ActionDispatch::IntegrationTest
       puts 'I am in capybara setup method'
     end
 
-    page.driver.browser.url_blacklist = self.class.blacklisted_urls
+
+    WebMock.disable_net_connect!(allow: self.class.blacklisted_urls)
 
     resize_window_by default_window_size
 
@@ -50,9 +57,9 @@ class IntransientCapybaraTest < ActionDispatch::IntegrationTest
     teardown_wait_for_requests_complete!
 
     report_traffic
-    page.driver.clear_network_traffic
+    # page.driver.clear_network_traffic
 
-    page.driver.clear_cookies
+    page.driver.browser.manage.delete_all_cookies
     Capybara.reset_sessions!
 
     super

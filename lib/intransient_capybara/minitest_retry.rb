@@ -1,12 +1,12 @@
 # Adapted from https://github.com/appfolio/minitest-optional_retry/blob/master/lib/minitest/optional_retry.rb
 require 'minitest'
-require 'atomic'
+require 'concurrent/atomics'
 
 module Minitest
   module OptionalRetry
 
     GLOBAL_RETRY_LIMIT = 25
-    @@global_retry_count = Atomic.new(0)
+    @@global_retry_count = Concurrent::AtomicReference.new(0)
 
     def run_one_method(klass, method_name, reporter)
       first_result = nil
