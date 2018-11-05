@@ -14,11 +14,34 @@ class IntransientCapybaraTest < ActionDispatch::IntegrationTest
   @@warm_asset_cache = Concurrent::AtomicReference.new(false)
   @@warming_asset_cache = Concurrent::AtomicReference.new(false)
 
+
+
+
   Capybara.register_driver :chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new(
       args: %w[headless disable-gpu no-sandbox]
     )
-    driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+    driver_capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+      # see
+      # https://robots.thoughtbot.com/headless-feature-specs-with-chrome
+      # https://developers.google.com/web/updates/2017/04/headless-chrome
+      chromeOptions: {
+        args: %w(headless disable-gpu no-sandbox),
+        # https://github.com/heroku/heroku-buildpack-google-chrome#selenium
+        binary:  ENV.fetch('GOOGLE_CHROME_SHIM', nil)
+      }.reject { |_, v| v.nil? }
+    )
+
+    if ENV['SELENIUM_DRIVER_URL'].present?
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :remote,
+        url: ENV.fetch('SELENIUM_DRIVER_URL'),
+        desired_capabilities: driver_capabilities
+      )
+    else
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+    end
   end
 
   Capybara.default_max_wait_time = 10
