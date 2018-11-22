@@ -46,8 +46,6 @@ class IntransientCapybaraTest < ActionDispatch::IntegrationTest
     teardown_wait_for_requests_complete!
 
     report_traffic
-    page.driver.clear_network_traffic
-    page.driver.clear_cookies
 
     Capybara.reset_sessions!
 
