@@ -16,19 +16,15 @@ https://github.com/appfolio/minitest-optional_retry
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Install Intransient Capybara from the command line:
 
-```ruby
-gem 'intransient_capybara'
-```
+    $ gem install intransient_capybara --source https://avvo-gems.public.artifactory.internetbrands.com
 
-And then execute:
+or within a Gemfile:
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install intransient_capybara
+    source 'https://avvo-gems.public.artifactory.internetbrands.com' do
+      gem 'intransient_capybara'
+    end
 
 ## Usage
 
@@ -123,7 +119,9 @@ Register the driver
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake false` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version.
+
+When a commit is pushed to Github with a version tag, this will trigger a CircleCI job that will build the gem, run any tests, and push the new gem version to Avvo Artifactory repo.
 
 ## Contributing
 
